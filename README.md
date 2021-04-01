@@ -1,4 +1,4 @@
-###Voting For a candidate
+### Voting For a candidate
 
 A simple decentralized application to vote for a candidate built on the Ethereum blockchain A boilerplate for building Dapps with webpack. 
 
