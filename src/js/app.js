@@ -26,12 +26,17 @@ window.App = {
       // this is not a transaction though, since the function is marked with "view" and
       // truffle contract automatically knows this
       instance.getNumOfCandidates().then(function(numOfCandidates){
-        if (numOfCandidates == 0){
-          instance.addCandidate("Candidate3","Democratic").then(function(result){  
-            $("#candidate-box").append(`<div class='form-check'><input class='form-check-input' type='checkbox' value='' id=${result.logs[0].args.candidateID}><label class='form-check-label' for=0>Candidate1</label></div>`+code)
+        if (numOfCandidates < 5){
+          instance.addCandidate("Candidate3","Congress").then(function(result){  
+           // console.log(`${result.logs[0].args.candidateID`);
+            var boxData = `<div class="card mb-4 box-shadow"><div class="card-header"><h4 class="my-0 font-weight-normal">Congress</h4></div><div class="card-body"><h3 class="card-title pricing-card-title">Candidate3</h3><button type="button" onclick="App.voteFor('+result.logs[0].args.candidateID+')" class="btn btn-lg btn-block btn-outline-primary" id=${result.logs[0].args.candidateID} onclick="App.voteFor(${result.logs[0].args.candidateID})" >Vote</button></div></div>`;
+            // $("#candidate-box").append(`<div class='form-check'><input class='form-check-input' type='checkbox' value='' id=${result.logs[0].args.candidateID}><label class='form-check-label' for=0>Candidate1</label></div>`+code)
+            $('#candidate-box').append(boxData);
           })
-          instance.addCandidate("Candidate2","Republican").then(function(result){
-            $("#candidate-box").append(`<div class='form-check'><input class='form-check-input' type='checkbox' value='' id=${result.logs[0].args.candidateID}><label class='form-check-label' for=1>Candidate1</label></div>`)
+          instance.addCandidate("Candidate4","BJP").then(function(result){
+            var boxData = '<div class="card mb-4 box-shadow"><div class="card-header"><h4 class="my-0 font-weight-normal">'+result.logs[0].args.candidateID+'</h4></div><div class="card-body"><h3 class="card-title pricing-card-title">'+result.logs[0].args.candidateID+'</h3><button type="button" onclick="App.voteFor('+result.logs[0].args.candidateID+')" class="btn btn-lg btn-block btn-outline-primary" id='+result.logs[0].args.candidateID+' >Vote</button></div></div>';
+            // $("#candidate-box").append(`<div class='form-check'><input class='form-check-input' type='checkbox' value='' id=${result.logs[0].args.candidateID}><label class='form-check-label' for=1>Candidate1</label></div>`)
+            $('#candidate-box').append(boxData);
           })
           // the global variable will take the value of this variable
           numOfCandidates = 2 
@@ -40,7 +45,9 @@ window.App = {
           for (var i = 0; i < numOfCandidates; i++ ){
             // gets candidates and displays them
             instance.getCandidate(i).then(function(data){
-              $("#candidate-box").append(`<div class="form-check"><input class="form-check-input" type="checkbox" value="" id=${data[0]}><label class="form-check-label" for=${data[0]}>${window.web3.toAscii(data[1])}</label></div>`)
+              var boxData = '<div class="card mb-4 box-shadow"><div class="card-header"><h4 class="my-0 font-weight-normal">'+window.web3.toAscii(data[2])+'</h4></div><div class="card-body"><h3 class="card-title pricing-card-title">'+window.web3.toAscii(data[1])+'</h3><button type="button" onclick="App.voteFor('+data[0]+')" class="btn btn-lg btn-block btn-outline-primary" id='+data[0]+' >Vote</button></div></div>';
+             // $("#candidate-box").append(`<div class="form-check"><input class="form-check-input" type="checkbox" value="" id=${data[0]}><label class="form-check-label" for=${data[0]}>${window.web3.toAscii(data[1])}</label></div>`)
+             $('#candidate-box').append(boxData);
             })
           }
         }
@@ -53,6 +60,25 @@ window.App = {
     })
   },
 
+  voteFor: function(data){
+    console.log(data);
+    //check if user id is entered
+    var uid = $("#id-input").val();
+    if (uid == ""){
+     // $("#id-input").addClass('is-invalid');
+      $("#msg").html('<div class="alert alert-danger" role="alert">Please enter a User Id!<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>')
+      return
+    }
+    var candidateID = data;
+    VotingContract.deployed().then(function(instance){
+      instance.vote(uid,parseInt(candidateID)).then(function(result){
+        console.log(result); 
+        $("#msg").html("<p>Voted for </p>")
+      })
+    }).catch(function(err){ 
+      console.error("ERROR! " + err.message)
+    })
+  },
   // Function that is called when user clicks the "vote" button
   vote: function() {
     var uid = $("#id-input").val() //getting user inputted id

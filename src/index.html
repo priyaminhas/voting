@@ -15,10 +15,11 @@
     
     <div class="container">
       <div class="row">
-        <div>
-          <h1 class="text-center">Ethereum Voting Dapp</h1>
+        <div class="col-md-12">
+          <h1 class="text-center">Candidate Voting and Counting</h1>
           <hr/>
           <br/>
+          <div id="msg"></div>
         </div>
       </div>
       <div class="row">
@@ -27,9 +28,14 @@
           <div class="input-group mb-3">
             <input type="text" class="form-control" id="id-input" placeholder="Enter ID">
           </div>
-          <div id="candidate-box"></div>
-          <button class="btn btn-primary" onclick="App.vote()">Vote</button>
-          <div id="msg"></div>
+        </div>
+        <div class="col-md-8"></div>
+        <div class="row">
+          <div class="col-md-12">
+            <div id="candidate-box" class="card-deck mb-3 text-center"></div>
+            <!-- <button class="btn btn-primary" onclick="App.vote()">Vote</button> -->
+            
+          </div>
         </div>
         <div class="col-md-6">
             <button class="btn btn-primary" onclick="App.findNumOfVotes()">Count Votes</button>
