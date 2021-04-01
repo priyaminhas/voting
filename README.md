@@ -3,8 +3,8 @@
 ## Setup
 ```
 npm install -g truffle
-git clone https://github.com/tko22/truffle-webpack-boilerplate.git
-cd truffle-webpack-boilerplate
+git clone https://github.com/priyaminhas/voting.git
+cd voting
 npm install
 npm run dev
 ```
